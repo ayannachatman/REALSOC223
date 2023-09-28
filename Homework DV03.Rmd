@@ -1,0 +1,26 @@
+---
+title: "Homework 05"
+author: "Ayanna Chatman"
+self-contained: true
+date: "2023-09-27"
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+twitch_data <- read_csv("https://raw.githubusercontent.com/vaiseys/dav-course/main/Data/twitchdata-update.csv")
+```
+
+```{r}
+library(janitor)
+twitch_data <- clean_names(twitch_data)
+
+# inspect new names
+colnames(twitch_data)
+```
+
+## Question 1
+
+```{r}
+
+```
