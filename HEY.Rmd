@@ -1,0 +1,13 @@
+---
+title: "HEY"
+author: "Ayanna Chatman"
+date: "2023-09-28"
+self-contained: true
+output: html_document
+---
+
+BING BONG!
+
+```{r}
+2+2
+```
