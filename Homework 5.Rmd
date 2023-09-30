@@ -1,0 +1,116 @@
+---
+title: "Homework 05"
+author: "Ayanna Chatman"
+self-contained: true
+date: "2023-09-27"
+output: html_document
+---
+
+## Question 1
+
+```{r}
+library(tidyverse)
+exercise_data <- read_csv("https://raw.githubusercontent.com/vaiseys/dav-course/main/Data/visualize_data.csv")
+```
+
+I predict that people who record more exercise will have less BMI.
+
+```{r}
+cor(exercise_data$Exercise, exercise_data$BMI)
+```
+
+```{r}
+ggplot(data = exercise_data,
+       mapping = aes(x = Exercise, y = BMI)) +
+  geom_point()
+```
+
+## Question 2
+
+```{r}
+library(causact)
+ ?corruptDF
+```
+
+CPI2017 is the level of public sector corruption seen in a country/territoty in 2017 on a scale of 0-100.
+
+HDI2017 measure of human development across different countries for 2017.
+
+## Question 3
+
+```{r}
+ggplot(corruptDF,
+       mapping = aes(x = CPI2017, y = HDI2017)) +
+  geom_point()
+```
+
+Based on the scatterplot, as the corruption perceptions index score increases, so does the human development index score increases as well.
+
+## Question 4
+
+```{r}
+ggplot(corruptDF,
+       mapping = aes(x = CPI2017, y = HDI2017)) +
+  geom_point() +
+  geom_smooth(method = "lm")
+```
+
+```{r}
+ggplot(corruptDF,
+       mapping = aes(x = CPI2017, y = HDI2017)) +
+  geom_point() +
+  geom_smooth(method = "gam")
+```
+
+When using the "lm" the line that shown is straighter, showing a more linear trend. Whereas the line that's produced when using "gam" follows the natural curve of the data, which is why I prefer the "gam" line.
+
+## Question 5 
+
+```{r}
+ggplot(corruptDF,
+       mapping = aes(x = CPI2017, y = HDI2017,
+                     color = region, 
+                     fill = region)) +
+  geom_point() +
+  geom_smooth(method = "gam") +
+  facet_wrap(~ region)
+```
+
+I changed used the facet_wrap function to show each region's relationship between HDI2017 and CPI2017.
+
+## Question 6
+
+```{r}
+ggplot(corruptDF,
+       mapping = aes(x = CPI2017, y = HDI2017,
+                     color = region, 
+                     fill = region)) +
+  geom_point() +
+  geom_smooth(method = "gam") +
+  scale_x_reverse() +
+  facet_wrap(~ region)
+```
+
+Using the scale_x_reverse function, I reversed the scale mapping.
+
+## Question 7
+
+```{r}
+ggplot(corruptDF,
+       mapping = aes(x = CPI2017, y = HDI2017,
+                     color = region, 
+                     fill = region)) +
+  geom_point() +
+  geom_smooth(method = "gam") +
+  labs(title = "Relationship Btwn Corruption Perceptions and Human Development Index Score in 2017", 
+       subtitle = "Data points are countries",
+       caption = "Source: Transparency.org/cpi ") +
+  scale_x_reverse() +
+  facet_wrap(~ region)
+```
+
+## Question 8
+
+```{r}
+ggsave(filename= "CPIxHDI_figure.pdf")
+```
