@@ -1,0 +1,47 @@
+---
+title: "Class Notes"
+author: "Ayanna Chatman"
+date: "2023-10-03"
+output: html_document
+---
+
+# 10/3
+
+TV data:
+
+-   share = how many people watched it
+
+-   patchwork = allows you to stack graphs together
+
+    -   P1 /P2 / P3 = stacks
+
+    -   P1 + P2 +P3 = puts them side by side
+
+    ```{r}
+    p1 <- ggplot(tv_ratings,
+                 aes(x = av_rating)) +
+      geom_histogram(color = "white",
+                     binwidth = .5,
+                     boundary = 7)
+
+    p2 <- ggplot(tv_ratings,
+                 aes(x = av_rating)) +
+      geom_freqpoly(binwidth = .5,
+                    boundary = 7)
+
+    p1 + p2
+    p1 / p2
+    ```
+
+Use histograms unless you're comparing more than one
+
+```{r}
+tv_ratings_2seasons <- tv_ratings |> 
+  group_by(title) |> 
+  mutate(maxseason = max(seasonNumber)) |> 
+  filter(maxseason >= 2) |> 
+  filter(seasonNumber <= 2) |> 
+  mutate(season = factor(seasonNumber,
+                         levels = c(1, 2),
+                         labels = c("First", "Second")))
+```
