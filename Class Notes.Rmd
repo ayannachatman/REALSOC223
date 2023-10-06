@@ -45,3 +45,11 @@ tv_ratings_2seasons <- tv_ratings |>
                          levels = c(1, 2),
                          labels = c("First", "Second")))
 ```
+
+# 10/5
+
+making DV 5 easier
+
+```{r}
+
+```
