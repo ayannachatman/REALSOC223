@@ -1,0 +1,54 @@
+---
+title: "2023-10-10-inclass"
+author: "Ayanna Chatman"
+date: "2023-10-10"
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+library(moderndive)
+library(ggthemes)
+library(patchwork)
+```
+
+```{r}
+data("evals")
+```
+
+```{r}
+set.seed(1015)                            # for replicable results
+
+minority <- evals %>%
+  mutate(random = runif(nrow(evals))) %>%  # as many random numbers as rows
+  arrange(prof_ID, random) %>%             # sort by random within groups
+  group_by(prof_ID) %>%                    # group it
+  slice(1) %>%                            # keep only one per prof
+  select(prof_ID, age, score, bty_avg, ethnicity ) %>%      # keep vars we need
+  ungroup()                               # just for completeness
+```
+
+```{r}
+library(skimr)
+skim(minority)
+```
+
+```{r}
+qplot(score, data = minority)
+```
+
+```{r}
+min1 <- lm(score ~ bty_avg,
+           data = minority)
+
+get_regression_table(min1)
+```
+
+```{r}
+ggplot(minority,
+       aes(x = ethnicity,
+           y = score)) +
+  geom_jitter(alpha = .3) +
+  geom_smooth(method = "lm",
+              se = FALSE)   
+```
