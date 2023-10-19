@@ -1,0 +1,104 @@
+---
+title: "Homework 06"
+author: "Ayanna Chatman"
+date: "2023-10-19"
+self-contained: true
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r}
+#| message: false
+library(tidyverse)
+library(moderndive)
+library(ggthemes)
+library(patchwork)
+theme_set(theme_light())
+```
+
+```{r}
+data(evals)
+```
+
+```{r}
+a <- evals |>
+  rename(sex = gender) 
+
+head(d)
+```
+
+```{r}
+mod2 <- lm(score ~ age + bty_avg,
+           data = a)
+
+get_regression_table(mod2)
+```
+
+```{r}
+mod2_preds <- get_regression_points(mod2)
+
+head(mod2_preds)
+```
+
+```{r, echo=FALSE}
+ggplot(a,
+       aes(x = age,
+           y = score)) +
+  geom_jitter(alpha = .3) +
+  geom_smooth(method = "lm",
+              se = FALSE) + 
+  labs(x = "Age",
+       y = "Evaluation",
+       title = "Simple regression results")
+```
+
+```{r, echo=FALSE}
+ggplot(mod2_preds,
+       aes(x = age,
+           y = residual)) + # how accurate was our graph residual = yi -^yi
+  geom_jitter(alpha = .3) +
+  geom_hline(yintercept = 0,
+             color = "blue") +
+  labs(x = "Age",
+       y = "Residual",
+       title = "Simple regression residuals")
+```
+
+VARIANCE
+
+```{r}
+vari_y <- a |> 
+  pull(score) %>%
+  var()
+
+vari_y
+```
+
+```{r, echo=FALSE}
+ggplot(d,
+       aes(x = age,
+           y = score)) +
+  geom_jitter(alpha = .3) +
+  geom_hline(yintercept = mean(d$score),
+             color = "blue") +
+  labs(x = "Age",
+       y = "Evaluation",
+       title = "Guessing the mean for everyone")
+```
+
+```{r, echo=FALSE}
+ggplot(d,
+       aes(x = age,
+           y = score)) +
+  geom_jitter(alpha = .3) +
+  geom_hline(yintercept = mean(d$score),
+             color = "blue") +
+  geom_smooth(method = "lm",
+              se = FALSE,
+              color = "red",
+              linetype = "dashed") +
+  labs(x = "Age",
+       y = "Evaluation",
+       title = "Mean vs. regression line")
+```
