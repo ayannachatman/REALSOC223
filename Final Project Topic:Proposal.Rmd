@@ -1,0 +1,11 @@
+---
+title: "Final Project Topic/Proposal"
+author: "Ayanna Chatman"
+self-contained: true
+date: "2023-11-04"
+output: html_document
+---
+
+My final project idea is based around this research question: How has the diversity within the NBA changed over the last 20 years? As a big basketball fan, I have always been fascinated by how the NBA, specifically its image, changes every few years. As the players get younger, and more diverse in nationality, ethnicity, and race, the players in the league become more relatable and personable, making the fan experience for younger generations more enjoyable. I am hoping to use information such as player age, race, ethnicity, and nationality to help answer my research question. I am also thinking of comparing draft classes (i.e. 2003 draft class [the greatest draft class, in my opinion] vs. 2023 draft class) to accomplish my goals with a smaller, possibly more accurate, data set. Here is one data set I'm thinking of using for my final project: <https://www.kaggle.com/datasets/justinas/nba-players-data/data>
+
+Last class, I learned that for her project, Emily will compare the men's and women's world cup data and seeing who scored more points. I also learned that for his project, Ethan will calculate the current major league basketball players chances of getting into the Hall of Fame.
