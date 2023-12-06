@@ -1,0 +1,200 @@
+---
+title: "AYANNA CHATMAN FINAL"
+author: "Ayanna Chatman"
+date: "2023-12-06"
+self-contained: true
+echo: FALSE
+message: FALSE
+warning: FALSE
+output: html_document
+---
+
+## 1. Introduction
+
+As an National Basketball Association (NBA) fan, it is easy to get caught up in the percentage of field goals made by players. When a player like Lebron James drops 30+ points on a rival team, who wouldn't want to talk about the points scored. But what about the number of field goals attempted? How does a player's position and role on the court, along with their age, affect the amount of his attempted field goals? You can learn a lot about a player's agility and playing IQ by looking at the amount of field goals he attempts to makes, which is why I decided to base my study around it. Field goals are defined as how many shots a player makes, and field goals attempted is how many shots a player attemps to make, therefore this value is typically larger. My research question is whether a players position and age affects their field goal attempts (FGA). In basketball there are five main positions: Center, Small Forward, Point Guard, Power Forward and Shooting Guard. Within these positions players have a unique role and skillset on the court that allow them to be a vital part of the team. During the 80s and 90s, these roles were more restrictive; you rarely saw a center do anything else but rebound, assist, and defend. Nowadays, we have centers such as Nikola Jokić averaging 29 points per game, along with having the most triple-doubles of the 2022-2023 season. So it is as though your position on the court correlates less with how a player's FGA. I choose to look at age and how it affects field goal attempts because age correlates to experience within the NBA. Therefore the older you are, the more experience you have had in the NBA.
+
+The data set I used is a compilation of player statistics from the NBA 2022-2023 regular seasons National Basketball Association player. This data set included each player's name, position, age, average field goals made per game, average field goals attempted per game, and more.
+
+The outcome variable for this study is field goals attempted, which I decided to focus on for the reasons stated above. There are two explanatory variables: position and age.
+
+## 2. Exploratory Data Analysis
+
+```{r, echo=FALSE}
+
+library(tidyverse)
+library(moderndive)
+library(dplyr)
+library(broom)
+library(knitr)
+theme_set(theme_minimal())
+```
+
+```{r, echo=FALSE}
+library(readxl)
+nba_data_processed <- read_excel("Desktop/nba_data_processed.xlsx")
+View(nba_data_processed)
+```
+
+```{r, echo=FALSE}
+playerstats <- nba_data_processed
+```
+
+### 2.1 Players stats based on position, age, and field goals attempted
+
+The data set below will specifically show each player's name, position, age and field goals attempted per game from the 2022-2023 regular season:
+
+```{r, echo=FALSE}
+pos_age_attempted <- playerstats %>% 
+  select(Player, Age, Pos, `Field Goals Attempted`) %>%
+  filter(Pos == "C" | Pos == "PG" | Pos == "SG" | Pos == "SF" | Pos == "PF")
+```
+
+### 2.2 Average field goals attempted per position
+
+The box plot below will describe the average field goal attempts made per game per position:
+
+```{r, echo=FALSE}
+ggplot(data = pos_age_attempted, aes(x = Pos,
+                           y = `Field Goals Attempted`,
+                           color = Pos)) +
+  labs(title = "Average Field Goal Attempts Per Game Made by each Position",
+       subtitle = "C = Center, PG = Point Guard, SG = Shooting Guard, SF = Small Forward, PF = Power Forward",
+       x = "Positions",
+       y = "Field Goal Attempts Averages Per Game") +
+   geom_boxplot(alpha = .6) +
+  geom_jitter(alpha = .2)
+```
+
+This box plot not only shows that Point Guards have the highest average of FGA (\~7) out of all the positions , but it also shows that there are also a large amount of outliers in the remaining four positions. So although point guards are attempting to make the most shots, there are some Small Forwards (most amount of outliers), and Shooting Guards (second most amount of outliers) attempting between 16-23 field goals per game. It also shows that the average FGA by each position are fairly similar to each other, with the lowest being (\~4) and the highest being (\~7).
+
+### 2.3 Field goals attempted per age
+
+The scatterplot below shows how many field goal are attempted per age, and it is color-coded to see which positions are attempting field goals by each age.
+
+```{r, echo=FALSE}
+ggplot(data = pos_age_attempted, aes(x = Age,
+                               y = `Field Goals Attempted`, 
+                               color = Pos)) +
+  labs(title = "Average Field Goals Attempted Per Game By Age",
+       subtitle = "C = Center, PG = Point Guard, SG = Shooting Guard, SF = Small Forward, PF = Power Forward",
+       x = "Age",
+       y = "Field Goals Attemped Per Game") +
+geom_point(alpha = .4)
+```
+
+From this scatterplot it is clear that players around the age of 23 attempt to make the most field goals per game, with most averages above 16 FGA per game. There is also a high volume of dots near ages 23, 24 and 25, showing us that the average NBA player's age is 23-25.
+
+### 2.4 Outcome Variable
+
+```{r, echo=FALSE}
+hist(pos_age_attempted$`Field Goals Attempted`,
+     main = "Field Goals Attempted Based on Player's Position and Age", 
+     xlab = "Field Goals Atempted (in shots)" )
+```
+
+The histogram above shows that the data is skewed. Meaning that my estimate for FGA are more accurate for lower values of FGA.
+
+## 3. Multiple Linear Regression
+
+### 3.1 Methods
+
+The components of my multiple linear regression are:
+
+1.  Outcome variable $$y$$ = Average Field Goal Attempts
+2.  Numerical explanatory data $$x_1$$ = Age
+3.  Categorical explanatory data $$x_2$$ = Position
+
+where the unit of analysis is players in the NBA 2022-2023 regular season.
+
+### 3.2 Model Results
+
+This regression table shows field goal attempts as a function of position and age.
+
+```{r, echo=FALSE}
+model1 <- lm(`Field Goals Attempted` ~ Age + Pos, 
+             data = pos_age_attempted)
+
+get_regression_table(model1)
+```
+
+The confidence interval shows us that according to a player's age, the number of FGA change from 0.011 to 0.177.
+
+In this model, according to a players positions If you are a center, the number of FGA changes from 0.535 to 5.168. If you are a power forward the number of FGA changes from 0.677 to 2.965 per game. If you are a point guard, the number of FGA change from 1.762 to 4.083 per game. If you are a small forward, the number of FGA changes from 0.418 to 2.654 per game. If you are a shooting guard the number of FGA changes from 0.853 to 2.985 per game.
+
+```{r, echo=FALSE}
+get_regression_summaries(model1)
+```
+
+Because the p value is less than .5 that means this is statistically significant.
+
+The regression table below is an interaction model, that specifically shows field goals attempts when age *depends* on position.
+
+```{r,echo=FALSE}
+model2 <- lm(`Field Goals Attempted` ~ Age * Pos, 
+             data = pos_age_attempted)
+get_regression_table(model2)
+```
+
+```{r, echo=FALSE}
+get_regression_summaries(model2)
+```
+
+Because the p value is less than .5 that means it is statistically significant.
+
+To see which model fits the data better I will run a Akaike Information Criterion below:
+
+```{r, echo=FALSE}
+AIC(model1,model2)
+```
+
+By performing the AIC, I know that my first model (model1) fits the data better than my second model (model2), therefore I will use this model for the remainder of my project.
+
+### 3.3 Interpreting the Regression table (equation)
+
+The regression equation for average field goals attempted is the following: $$\widehat{y}$$ = $$field goals attempted = 2.2852 + 0.094(Age) + 1.821(PG) + 2.922(PF) + 1.536(SF) + 1.919(SG)$$
+
+This intercept ($$2.2852$$) represents the average field goals attempted when the student isn't a point guard, power forward, small forward, or shooting guard and the age is 0.
+
+The estimate for the slope of age of player ($$0.094$$) is associated with change in average FGA per game depending on the player's position. Therefore, for every one year increase in age, there was an associate increase in FGA per game 0.0914 shots.
+
+The estimates for the four other positions are the offsets in intercept relative to the baseline group (centers). Therefore Point Guards shoot 1.821 more shots than Centers, Power Forwards shoot 2.922 more shots than Centers, Small Forwards shoot 1.536 more shots than Centers, and Shooting Guards shoot 1.919 more shots than Centers.
+
+### 3.4 Residual Analysis
+
+I conducted a residual analysis to determine whether there were any patterns of residuals for my model above.
+
+```{r, echo=FALSE}
+model1_regr_points <- get_regression_points(model1)
+model1_regr_points
+```
+
+```{r, echo=FALSE}
+model1a <- augment(model1)
+```
+
+```{r, echo=FALSE}
+ggplot(data = model1a, aes(x = `Field Goals Attempted`,
+       y = .resid)) +
+  geom_jitter(alpha = .4) +
+  geom_smooth(method = lm)
+```
+
+This residual plot is a great predictor of my model because the points are evenly placed above and below my line and there's no outliers on it and does not follow a systematic pattern of any kind.
+
+## 4. Discussion
+
+### 4.1 Conclusion
+
+Based on section 3.3 there is no significant difference in the amount of field goals that were attempted based on position, but interestingly enough, as age increases the amount of FGA increases as well. On average, the amount of FGA increased by \~0.1, which is not that significant of an increase. I was most surprised that age did not have a negative impact on FGA because I assumed that as you get older, you take less shots. But conducting this study allowed me to see that with more time in the NBA, and thus more experience, comes more confidence as a shooter.
+
+Overall, these results suggest that position and age is a factor of field goal attempts. This study confirmed what I already knew to be true as a avid basketball fan, but it was surprising seeing how there was not a significant difference in FGA based on positions, highlighting the well-roundness of the average NBA player.
+
+### 4.2 Limitations
+
+One limitation to this data set is that there were some players who had dual positions on the court (ex. they are both a shooting guard and small forward). I decided to omit these players because there wasn't enough players within those dual position categories to conduct proper analysis on, therefore I was not able to include their FGA values in this study. Another limitation I had was that this data set included only regular season statistics, and not pre-season nor playoff statistics. Including FGA made by players outside of the regular seasons, would give more accurate data on the amount of FGA throughout the entire season, which is a disadvantage to players who played better outside of the regular season.
+
+### 4.3 Further Questions
+
+If I were to continue researching this topic I would be interested in see how field goals made is affected by age and position and how it differs from what I found in my study. I would also like to use data that includes prior seasons so I can conclude whether my findings have been a common trend throughout the years or a newer phenomenon.
+
+I would also like to see how this study would play out using statistics from another country's basketball league. Would age and position effect the FGA in Australia's National Basketball League or the Basketball Africa League in the same way that it does in America?
